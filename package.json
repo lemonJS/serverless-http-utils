@@ -1,0 +1,12 @@
+{
+  "name": "@lemonjs/serverless-http-utils",
+  "version": "1.0.0",
+  "description": "Serverless HTTP utils",
+  "main": "src/index.ts",
+  "repository": "git@github.com:lemonJS/serverless-http-utils.git",
+  "author": "Lewis Monteith <lewismonteith@gmail.com",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.72"
+  }
+}
