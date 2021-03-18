@@ -8,15 +8,15 @@ A small utils package that simplifies REST handlers inside Serverless APIs.
 
 ### Installation
 ```shell
-$ yarn add @lemonjs/serverless-http-utils
+$ yarn add serverless-http-utils
 or
-$ npm install @lemonjs/serverless-http-utils
+$ npm install serverless-http-utils
 ```
 
 ### Usage
 Wrap any exported Serverless handler with the `handler` method and return a new instance of `HttpSuccess`:
 ```typescript
-import { handler, Event, HttpSuccess } from '@lemonjs/serverless-http-utils';
+import { handler, Event, HttpSuccess } from 'serverless-http-utils';
 
 export const handle = handler((event: Event) => {
   return new HttpSuccess(200, { hello: 'world' });
@@ -24,7 +24,7 @@ export const handle = handler((event: Event) => {
 ```
 Errors can be thrown anywhere by throwing a `HttpException`:
 ```typescript
-import { HttpException } from '@lemonjs/serverless-http-utils';
+import { HttpException } from 'serverless-http-utils';
 
 async function authenticate(token: string): void {
   if (!token) {
