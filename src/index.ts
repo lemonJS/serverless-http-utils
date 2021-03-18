@@ -25,6 +25,8 @@ export class HttpException extends Error {
 
     this.statusCode = statusCode;
     this.body = JSON.stringify({ error: message });
+
+    Object.setPrototypeOf(this, HttpException.prototype);
   }
 }
 

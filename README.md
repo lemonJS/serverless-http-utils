@@ -32,7 +32,7 @@ async function authenticate(token: string): void {
   }
 }
 ```
-See the `examples/` folder for more info.
+See the `example/` folder for more info.
 
 ### Contributing
 Clone the repository:
