@@ -1,0 +1,10 @@
+service: your-api
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+
+functions:
+  hello-world:
+    method: get
+    handler: api/hello-world/get.handle
