@@ -47,7 +47,9 @@ describe('HTTP utils', () => {
   describe('handler', () => {
     it('calls the provided handle with the event', async () => {
       const event = {} as APIGatewayProxyEventV2;
-      const handle = jest.fn(async () => null);
+      const handle = jest.fn(async () => {
+        return new HttpSuccess(200, { foo: 'bar' });
+      });
 
       await handler(handle)(event);
 

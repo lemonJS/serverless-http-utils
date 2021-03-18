@@ -1,9 +1,9 @@
 # Serverless HTTP Utils
 
-A small utils package that simplifies REST handlers inside Serverless TypeScript APIs.
+A small utils package that simplifies REST handlers inside Serverless APIs.
 
 ### Requirements
-- A Serverless API using Typescript
+- A Serverless API using node v14 or later
 - ApiGateway configured to use the v2 event
 
 ### Installation
