@@ -1,0 +1,117 @@
+{
+  "level": 30,
+  "time": 1616237379809,
+  "pid": 7,
+  "hostname": "",
+  "resource": "/",
+  "path": "/",
+  "httpMethod": "GET",
+  "headers": {
+    "Accept": "*/*",
+    "Accept-Encoding": "gzip, deflate, br",
+    "CloudFront-Forwarded-Proto": "https",
+    "CloudFront-Is-Desktop-Viewer": "true",
+    "CloudFront-Is-Mobile-Viewer": "false",
+    "CloudFront-Is-SmartTV-Viewer": "false",
+    "CloudFront-Is-Tablet-Viewer": "false",
+    "CloudFront-Viewer-Country": "GB",
+    "Host": "",
+    "User-Agent": "",
+    "Via": "",
+    "X-Amz-Cf-Id": "",
+    "X-Amzn-Trace-Id": "",
+    "X-Forwarded-For": "",
+    "X-Forwarded-Port": "",
+    "X-Forwarded-Proto": ""
+  },
+  "multiValueHeaders": {
+    "Accept": [
+      "*/*"
+    ],
+    "Accept-Encoding": [
+      "gzip, deflate, br"
+    ],
+    "CloudFront-Forwarded-Proto": [
+      "https"
+    ],
+    "CloudFront-Is-Desktop-Viewer": [
+      "true"
+    ],
+    "CloudFront-Is-Mobile-Viewer": [
+      "false"
+    ],
+    "CloudFront-Is-SmartTV-Viewer": [
+      "false"
+    ],
+    "CloudFront-Is-Tablet-Viewer": [
+      "false"
+    ],
+    "CloudFront-Viewer-Country": [
+      "GB"
+    ],
+    "Host": [
+      ""
+    ],
+    "Postman-Token": [
+      ""
+    ],
+    "User-Agent": [
+      ""
+    ],
+    "Via": [
+      ""
+    ],
+    "X-Amz-Cf-Id": [
+      ""
+    ],
+    "X-Amzn-Trace-Id": [
+      ""
+    ],
+    "X-Forwarded-For": [
+      ""
+    ],
+    "X-Forwarded-Port": [
+      ""
+    ],
+    "X-Forwarded-Proto": [
+      ""
+    ]
+  },
+  "queryStringParameters": null,
+  "multiValueQueryStringParameters": null,
+  "pathParameters": null,
+  "stageVariables": null,
+  "requestContext": {
+    "authorizer": null,
+    "resourceId": "",
+    "resourcePath": "/",
+    "httpMethod": "GET",
+    "extendedRequestId": "",
+    "requestTime": "20/Mar/2021:10:49:39 +0000",
+    "path": "/",
+    "accountId": "",
+    "protocol": "HTTP/1.1",
+    "stage": "",
+    "domainPrefix": "",
+    "requestTimeEpoch": 1616237379482,
+    "requestId": "",
+    "identity": {
+      "cognitoIdentityPoolId": null,
+      "accountId": null,
+      "cognitoIdentityId": null,
+      "caller": null,
+      "sourceIp": "",
+      "principalOrgId": null,
+      "accessKey": null,
+      "cognitoAuthenticationType": null,
+      "cognitoAuthenticationProvider": null,
+      "userArn": null,
+      "userAgent": "",
+      "user": null
+    },
+    "domainName": "",
+    "apiId": ""
+  },
+  "body": null,
+  "isBase64Encoded": false
+}

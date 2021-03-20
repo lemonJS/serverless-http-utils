@@ -1,6 +1,19 @@
-import { APIGatewayProxyEventHeaders, APIGatewayProxyEventV2 } from 'aws-lambda';
+import {
+  APIGatewayProxyEvent,
+  APIGatewayProxyEventHeaders,
+  APIGatewayProxyEventQueryStringParameters,
+  APIGatewayProxyEventPathParameters,
+} from 'aws-lambda';
 
-export type Event = APIGatewayProxyEventV2;
+export type Event = {
+  path: string;
+  method: string;
+  headers: APIGatewayProxyEventHeaders;
+  query: APIGatewayProxyEventQueryStringParameters;
+  params: APIGatewayProxyEventPathParameters,
+  body: any;
+  session: any;
+};
 
 export type HandlerFunction = (event: Event) => Promise<HttpSuccess>;
 
@@ -31,12 +44,44 @@ export class HttpException extends Error {
 }
 
 /**
+ * Get the contents of the principleId if it exists
+ * @param {APIGatewayProxyEvent} event
+ * @return {any}
+ */
+function getAuthorizerPrinciple(event: APIGatewayProxyEvent): any {
+  const { authorizer } = event?.requestContext || {};
+
+  return authorizer
+    ? JSON.parse(authorizer['principalId'])
+    : null;
+}
+
+/**
+ * Convert the APIGatewayProxyEvent to an express-like event
+ * @param {APIGatewayProxyEvent} event
+ * @return {Event}
+ */
+function createHandlerEvent(event: APIGatewayProxyEvent): Event {
+  return {
+    path: event.path || '/',
+    method: event.httpMethod || 'GET',
+    headers: event.headers || {},
+    query: event.queryStringParameters || {},
+    params: event.pathParameters || {},
+    body: event.body ? JSON.parse(event.body) : {},
+    session: getAuthorizerPrinciple(event)
+  };
+}
+
+/**
  * Custom http handler that returns a structured
  * response.
  * @param {HandlerFunction} handle
  * @return {Promise<HttpSuccess | HttpException>}
  */
-export const handler = (handle: HandlerFunction) => async (event: Event) => {
+export const handler = (handle: HandlerFunction) => async (proxyEvent: APIGatewayProxyEvent) => {
+  const event = createHandlerEvent(proxyEvent);
+
   return handle(event).catch(error => {
     return error instanceof HttpException
       ? error

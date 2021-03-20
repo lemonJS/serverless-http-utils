@@ -1,5 +1,5 @@
-import { APIGatewayProxyEventV2 } from 'aws-lambda';
-import { handler, HttpSuccess, HttpException } from '../../src';
+import { HttpSuccess, HttpException } from '../../src';
+import { given, when } from '../helpers';
 
 describe('HTTP utils', () => {
   describe('HttpSuccess', () => {
@@ -46,23 +46,119 @@ describe('HTTP utils', () => {
 
   describe('handler', () => {
     it('calls the provided handle with the event', async () => {
-      const event = {} as APIGatewayProxyEventV2;
-      const handle = jest.fn(async () => {
-        return new HttpSuccess(200, { foo: 'bar' });
-      });
+      const event = given.anApiGatewayProxyEvent();
+      const handle = given.theHttpHandlerReturnsHttpSuccess(200, {});
 
-      await handler(handle)(event);
+      await when.theHandlerIsCalled(handle, event);
 
-      expect(handle).toHaveBeenCalledWith(event);
+      expect(handle).toHaveBeenCalled();
+    });
+
+    it('forwards the path', async () => {
+      const event = given.anApiGatewayProxyEvent({ path: '/v1/user' });
+      const handle = given.theHttpHandlerReturnsHttpSuccess(200, {});
+
+      await when.theHandlerIsCalled(handle, event);
+
+      expect(handle).toHaveBeenCalledWith(
+        expect.objectContaining({ path: '/v1/user' })
+      );
+    });
+
+    it('forwards the method', async () => {
+      const event = given.anApiGatewayProxyEvent({ httpMethod: 'PUT' });
+      const handle = given.theHttpHandlerReturnsHttpSuccess(200, {});
+
+      await when.theHandlerIsCalled(handle, event);
+
+      expect(handle).toHaveBeenCalledWith(
+        expect.objectContaining({ method: 'PUT' })
+      );
+    });
+
+    it('forwards the headers', async () => {
+      const event = given.anApiGatewayProxyEvent({ headers: { 'Accept': 'application/json' } });
+      const handle = given.theHttpHandlerReturnsHttpSuccess(200, {});
+
+      await when.theHandlerIsCalled(handle, event);
+
+      expect(handle).toHaveBeenCalledWith(
+        expect.objectContaining({ headers: { 'Accept': 'application/json' } })
+      );
+    });
+
+    it('forwards the query params', async () => {
+      const event = given.anApiGatewayProxyEvent({ queryStringParameters: { teapot: 'kettle' } });
+      const handle = given.theHttpHandlerReturnsHttpSuccess(200, {});
+
+      await when.theHandlerIsCalled(handle, event);
+
+      expect(handle).toHaveBeenCalledWith(
+        expect.objectContaining({ query: { teapot: 'kettle' } })
+      );
+    });
+
+    it('forwards the path params', async () => {
+      const event = given.anApiGatewayProxyEvent({ pathParameters: { id: '5' } });
+      const handle = given.theHttpHandlerReturnsHttpSuccess(200, {});
+
+      await when.theHandlerIsCalled(handle, event);
+
+      expect(handle).toHaveBeenCalledWith(
+        expect.objectContaining({ params: { id: '5' } })
+      );
+    });
+
+    it('forwards and parses the body if it exists', async () => {
+      const event = given.anApiGatewayProxyEvent({ body: JSON.stringify({ 'teapot': 'kettle' }) });
+      const handle = given.theHttpHandlerReturnsHttpSuccess(200, {});
+
+      await when.theHandlerIsCalled(handle, event);
+
+      expect(handle).toHaveBeenCalledWith(
+        expect.objectContaining({ body: { teapot: 'kettle' } })
+      );
+    });
+
+    it('forwards an empty object for the body when it does not exist', async () => {
+      const event = given.anApiGatewayProxyEvent();
+      const handle = given.theHttpHandlerReturnsHttpSuccess(200, {});
+
+      await when.theHandlerIsCalled(handle, event);
+
+      expect(handle).toHaveBeenCalledWith(
+        expect.objectContaining({ body: {} })
+      );
+    });
+
+    it('forwards and parses the principleId as the session if it exists', async () => {
+      const requestContext = { authorizer: { principalId: JSON.stringify({ id: '5' }) } } as any;
+      const event = given.anApiGatewayProxyEvent({ requestContext });
+      const handle = given.theHttpHandlerReturnsHttpSuccess(200, {});
+
+      await when.theHandlerIsCalled(handle, event);
+
+      expect(handle).toHaveBeenCalledWith(
+        expect.objectContaining({ session: { id: '5' } })
+      );
+    });
+
+    it('forwards null for the session when the principleId does not exist', async () => {
+      const event = given.anApiGatewayProxyEvent();
+      const handle = given.theHttpHandlerReturnsHttpSuccess(200, {});
+
+      await when.theHandlerIsCalled(handle, event);
+
+      expect(handle).toHaveBeenCalledWith(
+        expect.objectContaining({ session: null })
+      );
     });
 
     it('returns the HttpSuccess class with the correct properties', async () => {
-      const event = {} as APIGatewayProxyEventV2;
-      const handle = jest.fn(async () => {
-        return new HttpSuccess(200, { foo: 'bar' });
-      });
+      const event = given.anApiGatewayProxyEvent();
+      const handle = given.theHttpHandlerReturnsHttpSuccess(200, { foo: 'bar' });
 
-      const res = await handler(handle)(event);
+      const res = await when.theHandlerIsCalled(handle, event);
 
       expect(res).toBeInstanceOf(HttpSuccess);
       expect(res.statusCode).toEqual(200);
@@ -71,12 +167,10 @@ describe('HTTP utils', () => {
 
     describe('when an HttpException is thrown', () => {
       it('returns the HttpException with the correct properties', async () => {
-        const event = {} as APIGatewayProxyEventV2;
-        const handle = jest.fn(async () => {
-          throw new HttpException(401, 'Unauthorized');
-        });
+        const event = given.anApiGatewayProxyEvent();
+        const handle = given.theHttpHandlerReturnsHttpException(401, 'Unauthorized');
 
-        const res = await handler(handle)(event);
+        const res = await when.theHandlerIsCalled(handle, event);
 
         expect(res).toBeInstanceOf(HttpException);
         expect(res.statusCode).toEqual(401);
@@ -86,12 +180,10 @@ describe('HTTP utils', () => {
 
     describe('when a generic Error is thrown', () => {
       it('converts the Error to be an instance of HttpException', async () => {
-        const event = {} as APIGatewayProxyEventV2;
-        const handle = jest.fn(async () => {
-          throw new Error('Unknown error');
-        });
+        const event = given.anApiGatewayProxyEvent();
+        const handle = given.theHttpHandlerThrowsAnError('Unknown error');
 
-        const res = await handler(handle)(event);
+        const res = await when.theHandlerIsCalled(handle, event);
 
         expect(res).toBeInstanceOf(HttpException);
         expect(res.statusCode).toEqual(500);
