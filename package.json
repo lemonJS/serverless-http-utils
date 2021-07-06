@@ -1,6 +1,6 @@
 {
   "name": "serverless-http-utils",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Serverless HTTP utils",
   "main": "dist/index.js",
   "repository": "git@github.com:lemonJS/serverless-http-utils.git",
